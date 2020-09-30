@@ -23,6 +23,8 @@ module.exports = {
     'react/jsx-filename-extension': [1, { extensions: ['.js', '.jsx'] }],
     'react/state-in-constructor': 0,
     'react/prefer-default-export': 0,
+    'no-underscore-dangle': 0,
+    'import/prefer-default-export': 0,
   },
   settings: {
     'import/resolver': {

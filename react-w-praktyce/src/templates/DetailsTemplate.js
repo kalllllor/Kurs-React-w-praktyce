@@ -6,6 +6,7 @@ import Heading from 'components/atoms/Heading/Heading';
 import Paragraph from 'components/atoms/Paragraph/Paragraph';
 import Button from 'components/atoms/Button/Button';
 import UserPageTemplate from 'templates/UserPageTemplate';
+import withContext from 'hoc/withContext';
 
 const StyledWrapper = styled.div`
   padding: 25px 150px 25px 70px;
@@ -53,31 +54,31 @@ const StyledParagraph = styled(Paragraph)`
   font-weight: ${({ theme }) => theme.bold};
 `;
 
-const DetailsTemplate = ({ pageType, title, created, content, articleUrl, twitterName }) => (
-  <UserPageTemplate pageType={pageType}>
+const DetailsTemplate = ({ pageContext, title, created, content, articleUrl, twitterName }) => (
+  <UserPageTemplate pageContext={pageContext}>
     <StyledWrapper>
       <StyledHeadWrapper>
         <div>
           <Heading>{title}</Heading>
           <StyledParagraph>{created}</StyledParagraph>
         </div>
-        {pageType === 'twitters' && (
+        {pageContext === 'twitters' && (
           <StyledAvatar src={`https://twitter-avatar.now.sh/${twitterName}`} />
         )}
       </StyledHeadWrapper>
-      {pageType === 'articles' && <StyledLink href={articleUrl}>Open article</StyledLink>}
+      {pageContext === 'articles' && <StyledLink href={articleUrl}>Open article</StyledLink>}
       <Paragraph>{content}</Paragraph>
-      <StyledButton activeColor={pageType}>
-        <Link to={`/${pageType}`}>SAVE / CLOSE</Link>
+      <StyledButton activeColor={pageContext}>
+        <Link to={`/${pageContext}`}>SAVE / CLOSE</Link>
       </StyledButton>
     </StyledWrapper>
   </UserPageTemplate>
 );
 
-export default DetailsTemplate;
+export default withContext(DetailsTemplate);
 
 DetailsTemplate.propTypes = {
-  pageType: PropTypes.oneOf(['notes', 'twitters', 'articles']),
+  pageContext: PropTypes.oneOf(['notes', 'twitters', 'articles']),
   title: PropTypes.string.isRequired,
   created: PropTypes.string.isRequired,
   content: PropTypes.string.isRequired,
@@ -86,7 +87,7 @@ DetailsTemplate.propTypes = {
 };
 
 DetailsTemplate.defaultProps = {
-  pageType: 'notes',
+  pageContext: 'notes',
   articleUrl: null,
   twitterName: null,
 };
