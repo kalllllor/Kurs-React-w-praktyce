@@ -46,6 +46,9 @@ const StyledButtonIcon = styled(ButtonIcon)`
   border-radius: 50px;
   background-size: 35%;
   z-index: 9999;
+  transition: transform 0.2s ease-in-out;
+  transform: rotate(${({ isVisible }) => (isVisible ? '45deg' : '0deg')});
+  border: none;
 `;
 
 class GridTemplate extends Component {
@@ -77,6 +80,7 @@ class GridTemplate extends Component {
             activeColor={pageContext}
             icon={plusIcon}
             onClick={this.handleNewItemBarToggle}
+            isVisible={isNewItemBarVisible}
           />
           <NewItemBar isVisible={isNewItemBarVisible} />
         </StyledWrapper>
