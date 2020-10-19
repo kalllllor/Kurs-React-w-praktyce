@@ -10,7 +10,7 @@ import withContext from 'hoc/withContext';
 
 const StyledWrapper = styled.div`
   padding: 25px 150px 25px 70px;
-
+  margin-left: 100px;
   p {
     padding-right: 200px;
   }
@@ -54,13 +54,13 @@ const StyledParagraph = styled(Paragraph)`
   font-weight: ${({ theme }) => theme.bold};
 `;
 
-const DetailsTemplate = ({ pageContext, title, created, content, articleUrl, twitterName }) => (
+const DetailsTemplate = ({ pageContext, title,  content, articleUrl, twitterName }) => (
   <UserPageTemplate pageContext={pageContext}>
     <StyledWrapper>
       <StyledHeadWrapper>
         <div>
           <Heading>{title}</Heading>
-          <StyledParagraph>{created}</StyledParagraph>
+          <StyledParagraph>3 days ago</StyledParagraph>
         </div>
         {pageContext === 'twitters' && (
           <StyledAvatar src={`https://twitter-avatar.now.sh/${twitterName}`} />
@@ -80,7 +80,6 @@ export default withContext(DetailsTemplate);
 DetailsTemplate.propTypes = {
   pageContext: PropTypes.oneOf(['notes', 'twitters', 'articles']),
   title: PropTypes.string.isRequired,
-  created: PropTypes.string.isRequired,
   content: PropTypes.string.isRequired,
   articleUrl: PropTypes.string,
   twitterName: PropTypes.string,

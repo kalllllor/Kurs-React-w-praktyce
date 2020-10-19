@@ -85,7 +85,6 @@ class Card extends Component {
       id,
       pageContext,
       title,
-      created,
       twitterName,
       articleUrl,
       content,
@@ -95,16 +94,16 @@ class Card extends Component {
     const { redirect } = this.state;
 
     if (redirect) {
-      return <Redirect to={`${pageContext}/${id}`} />;
+      return <Redirect to={`${pageContext}/details/${id}`} />;
     }
 
     return (
-      <StyledWrapper onClick={this.handleCardClick}>
-        <InnerWrapper activeColor={pageContext}>
+      <StyledWrapper>
+        <InnerWrapper onClick={this.handleCardClick} activeColor={pageContext}>
           <StyledHeading>{title}</StyledHeading>
-          <DateInfo>{created}</DateInfo>
+          <DateInfo>3 days ago</DateInfo>
           {pageContext === 'twitters' && (
-            <StyledAvatar src={`https://twitter-avatar.now.sh/${twitterName}`} />
+            <StyledAvatar src={`https://twitter-avatar.now.sh/${twitterName}`}  onError={(e)=>{e.target.onerror = null; e.target.src=`https://twitter-avatar.now.sh/hello_roman`}} />
           )}
           {pageContext === 'articles' && <StyledLinkButton href={articleUrl} />}
         </InnerWrapper>
@@ -121,9 +120,8 @@ class Card extends Component {
 
 Card.propTypes = {
   pageContext: PropTypes.oneOf(['notes', 'twitters', 'articles']),
-  id: PropTypes.number.isRequired,
+  id: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
-  created: PropTypes.string.isRequired,
   twitterName: PropTypes.string,
   articleUrl: PropTypes.string,
   content: PropTypes.string.isRequired,

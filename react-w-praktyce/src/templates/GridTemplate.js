@@ -6,19 +6,29 @@ import Input from 'components/atoms/Input/Input';
 import Heading from 'components/atoms/Heading/Heading';
 import Paragraph from 'components/atoms/Paragraph/Paragraph';
 import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
+import NewItemBar from 'components/organisms/NewItemBar/NewItemBar';
 import plusIcon from 'assets/icons/plus.svg';
 import withContext from 'hoc/withContext';
-import NewItemBar from 'components/organisms/NewItemBar/NewItemBar';
 
 const StyledWrapper = styled.div`
   position: relative;
   padding: 25px 150px 25px 70px;
+  margin-left: 100px;
 `;
 
 const StyledGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-gap: 85px;
+
+  @media (max-width: 1500px) {
+    grid-gap: 45px;
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (max-width: 1100px) {
+    grid-template-columns: 1fr;
+  }
 `;
 
 const StyledPageHeader = styled.div`
@@ -39,16 +49,15 @@ const StyledParagraph = styled(Paragraph)`
 `;
 
 const StyledButtonIcon = styled(ButtonIcon)`
-  background-color: ${({ activeColor, theme }) => theme[activeColor]};
   position: fixed;
   bottom: 40px;
   right: 40px;
-  border-radius: 50px;
+  background-color: ${({ activecolor, theme }) => theme[activecolor]};
   background-size: 35%;
-  z-index: 9999;
+  border-radius: 50px;
+  z-index: 10000;
   transition: transform 0.2s ease-in-out;
-  transform: rotate(${({ isVisible }) => (isVisible ? '45deg' : '0deg')});
-  border: none;
+  transform: rotate(${({ isVisible }) => (isVisible ? '45deg' : '0')});
 `;
 
 class GridTemplate extends Component {
@@ -56,7 +65,7 @@ class GridTemplate extends Component {
     isNewItemBarVisible: false,
   };
 
-  handleNewItemBarToggle = () => {
+  toggleNewItemBar = () => {
     this.setState((prevState) => ({
       isNewItemBarVisible: !prevState.isNewItemBarVisible,
     }));
@@ -65,6 +74,7 @@ class GridTemplate extends Component {
   render() {
     const { children, pageContext } = this.props;
     const { isNewItemBarVisible } = this.state;
+
     return (
       <UserPageTemplate>
         <StyledWrapper>
@@ -77,12 +87,12 @@ class GridTemplate extends Component {
           </StyledPageHeader>
           <StyledGrid>{children}</StyledGrid>
           <StyledButtonIcon
-            activeColor={pageContext}
+            onClick={this.toggleNewItemBar}
             icon={plusIcon}
-            onClick={this.handleNewItemBarToggle}
+            activecolor={pageContext}
             isVisible={isNewItemBarVisible}
           />
-          <NewItemBar isVisible={isNewItemBarVisible} />
+          <NewItemBar handleClose={this.toggleNewItemBar} isVisible={isNewItemBarVisible} />
         </StyledWrapper>
       </UserPageTemplate>
     );

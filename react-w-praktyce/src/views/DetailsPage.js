@@ -1,26 +1,60 @@
-import React from 'react';
+import React, { Component } from 'react';
 import DetailsTemplate from 'templates/DetailsTemplate';
+import withContext from 'hoc/withContext'
+import {connect} from 'react-redux'
+import axios from 'axios'
+import { object } from '@storybook/addon-knobs';
 
-const DetailsPage = () => {
-  const dummyArticle = {
-    id: 1,
-    title: 'Wake me up when Vue ends',
-    content:
-      'Lorem ipsum dolor sit amet consectetur adipisicing elit. Delectus, tempora quibusdam natus modi tempore esse adipisci, dolore odit animi',
-    twitterName: 'hello_roman',
-    articleUrl: 'https://youtube.com/helloroman',
-    created: '1 day',
-  };
+class DetailsPage extends Component {
+  state = {
+    activeItem: {
+      title: '',
+      content: '',
+      articleUrl: '',
+      twitterName: ''
+    }
+  }
 
-  return (
-    <DetailsTemplate
-      title={dummyArticle.title}
-      created={dummyArticle.created}
-      content={dummyArticle.content}
-      articleUrl={dummyArticle.articleUrl}
-      twitterName={dummyArticle.twitterName}
-    />
-  );
-};
+  componentDidMount(){
+    if(this.props.activeItem) {
+      const [activeItem] = this.props.activeItem
+      this.setState({activeItem})
+    }
+    else{
+      const {match: {params: {id}}} = this.props;
+      axios.get(`http://localhost:9000/api/note/${id}`)
+      .then(({data}) => this.setState({activeItem: data}))
+      .catch(err => console.log(err))
+    }
 
-export default DetailsPage;
+  }
+
+  render() {
+    const {activeItem} = this.state;
+    if(activeItem) {
+      return (
+        <DetailsTemplate
+          title={activeItem.title}
+          content={activeItem.content}
+          articleUrl={activeItem.articleUrl}
+          twitterName={activeItem.twitterName}
+        />
+      );
+    }
+    return (
+      <h1>Notatka została usunieta :(</h1>
+    )
+
+  }
+}
+
+const mapStateToProps = (state, ownProps) =>  {
+  if(state[ownProps.pageContext]) {
+    return{
+      activeItem: state[ownProps.pageContext].filter(item => item._id === ownProps.match.params.id)
+    }
+  }
+  return object;
+}
+
+export default withContext(connect(mapStateToProps)(DetailsPage));
